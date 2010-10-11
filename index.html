@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>index</title>
+	<meta name="author" content="Tatu Kairi">
+  <script type="text/javascript" charset="utf-8">
+  
+    var alphabet = "abcdefghijklmnopqrstuvwxyz"
+    // create two hash maps with letters corresponding to a numerical value A=1, B=2, ...
+    // one with maps letters to numbers and another one vica versa
+    var numerize = {}, alphabetize = {};
+    for (var i = 0; i < 26; i++){
+      numerize[alphabet[i]] = i;
+      alphabetize[i] = alphabet[i];
+    }
+  
+    function solitaire(key) {
+      return key
+    }
+    function _conform(string) {
+      return _pad(string.toLowerCase().split(" ").join(""));
+    }
+    
+    function _splitToGroups(string) { // strings must be in groups of 5 characters
+      var result = [];
+
+      for (var i = 0; i <= string.length; i += 5){
+        result.push(string.slice(i-5, i));
+      }
+      return result;
+    }
+    
+    function _pad(string){
+      // pad rest with letter X, as per custom
+      var result = string;
+      var leftover = string.length % 5;
+      if (leftover > 0){
+
+        var padding = "";
+        for (var j = leftover; j < 5; j++){
+          padding += "x";
+        }
+        result += padding;  
+      }
+
+      return result;
+    }
+  
+    function _randomKey(length) {
+      var result = "";
+      for (var i = 0; i < length; i++){
+        result += alphabetize[Math.round(Math.random()*25)]; // TODO: make better?
+      }
+      console.log("random key: " + result); // TODO: remove
+      return result;
+    }
+  
+    function encrypt(input, keystream) {
+      var result = "";
+      for (var i = 0; i < input.length; i++) {
+        temp = (numerize[input[i]] + numerize[keystream[i]]) % 26
+        console.log(numerize[input[i]] + " " + numerize[keystream[i]] + " "+ (numerize[input[i]] + numerize[keystream[i]]) % 26) // TODO: remove
+        result += alphabetize[temp];
+      }
+      console.log(result) // TODO: remove
+      return result;
+    }
+  
+    window.onload = function() {
+
+      document.getElementById('enc-button').onclick = function() {
+        var input = document.getElementById('enc-input').value;
+        input = _conform(input);
+        var key = _randomKey(input.length);
+        var keystream = solitaire(key, input.length); 
+
+        console.log("input: " + input);
+        console.log("keystream: " + keystream);
+        var result = "result: " + encrypt(input, keystream) + "<br />input: " + input + 
+                      "<br />key: " + key;
+
+        document.getElementById('enc-output').innerHTML = result;
+      };  
+    };
+  </script>
+
+</head>
+<body>
+  <input type="text" id="enc-input" />
+  <button id="enc-button">Encrypt</button>
+  <br />
+  <div id="enc-output"></div>
+</body>
+</html>
