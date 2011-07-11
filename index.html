@@ -18,8 +18,14 @@
     }
   
     function solitaire(key) {
+      
       return key
     }
+
+    function shuffle(array){
+      return array.sort(function(){ return Math.random() - 0.5 });
+    }
+
     function _conform(string) {
       return _pad(string.toLowerCase().split(" ").join(""));
     }
